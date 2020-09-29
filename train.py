@@ -23,6 +23,8 @@ parser.add_argument('--seed', type=int, default=1, help='Specify the global rand
 parser.add_argument('--num_topics', type=int, default=379, help='Specify the number of unique topics in training')
 parser.add_argument('--vocab_size', type=int, default=62416, help='Number of words in vocabulary')
 parser.add_argument('--embd_dim', type=int, default=400, help='Dimensionality for word embeddings')
+parser.add_argument('--img_width', type=int, default=180, help='Width of resized similarity grid')
+parser.add_argument('--img_height', type=int, default=180, help='Height of resized similarity grid')
 parser.add_argument('--train_resps_path', type=str, help='Load path to training responses as text')
 parser.add_argument('--valid_resps_path', type=str, help='Load path to vaidation responses as text')
 parser.add_argument('--wlist_path', type=str, help='Load path to list of word indices')
@@ -119,7 +121,9 @@ def main(args):
     NUM_TOPICS = args.num_topics
     VOCAB_SIZE = args.vocab_size
     EMBD_DIM = args.embd_dim
-    hyperparameters = {'VOCAB_SIZE': VOCAB_SIZE, 'EMBD_DIM': EMBD_DIM}
+    IMG_WIDTH = args.IMG_WIDTH
+    IMG_HEIGHT = args.IMG_HEIGHT
+    hyperparameters = {'VOCAB_SIZE': VOCAB_SIZE, 'EMBD_DIM': EMBD_DIM. 'IMG_WIDTH': IMG_WIDTH, 'IMG_HEIGHT': IMG_HEIGHT}
     my_model = SimilarityGridModel(hyperparameters)
     my_model = my_model.float()
 

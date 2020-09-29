@@ -1,5 +1,8 @@
+#! /usr/bin/env python
+
 import torch
 import torchvision.models as models
+import kornia
 
 class SimilarityGridModel(torch.nn.Module):
     def __init__(self, hyperparameters):
@@ -23,8 +26,6 @@ class SimilarityGridModel(torch.nn.Module):
         return cos(xx, yy)
 
     def forward(self, p, p_len, r, r_len, batch_size):
-
-        # Perform dynamic shuffling to duplicate the size of the data and get y_true
         # Embed all words with learnable word embeddings for each word in vocabulary (maybe try w2vec)
         # Construct similarity grid (with multiple channels)
         # Pass through resnet 
@@ -79,8 +80,20 @@ class SimilarityGridModel(torch.nn.Module):
 
         grid = torch.cat((gridCos, gridCos2, gridCos3), 3)
 
+        # Crop and resize the grid
+        # For pytorch, the image should be NCHW (it was NHWC in tensorflow)
+        grid = torch.transpose(grid, 1,3)
+        # So now the dimensions are : [batch_size, num_channels, max_p_len, max_r_len]
+        # Create the bounding boxes for cropping
+        zero_zero = torch.zeros([batch_size, 2])
+        zero_max = torch.cat(torch.unsqueeze(torch.zeros(batch_size)), torch.unsqueeze(r_len, 1)), 1)
+        max_max = torch.cat((torch.unsqueeze(p_len, 1), torch.unsqueeze(r_len, 1)), 1)
+        max_zero = torch.cat((torch.unsqueeze(p_len, 1), torch.unsqueeze(torch.zeros(batch_size))), 1)
+        boxes = torch.cat((torch.unsqueeze(zero_zero, 1), torch.unsqueeze(zero_max, 1), torch.unsqueeze(max_max, 1), torch.unsqueeze(max_zero, 1)), 1)
+        grid_proc = kornia.crop_and_resize(grid, boxes, [self.hyps['IMG_WIDTH'], self.hyps['IMG_HEIGHT']])
+
         # Pass through resnet-18
-        y_1000 = self.resnet18(grid)
+        y_1000 = self.resnet18(grid_proc)
         y_pred = torch.sigmoid(self.final_layer(y_1000))
 
         return y_pred
