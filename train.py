@@ -89,6 +89,11 @@ def main(args):
     prompts_valid_idxs = np.loadtxt(args.valid_prompts_idxs_path, dtype=np.int32)
     topics_dist = np.loadtxt(args.unique_prompts_distribution_path, dtype=np.int32)
 
+    #Temp
+    print(prompts_train_idxs.shape)
+    print(responses_train.shape)
+    print(responses_train_lens.shape)
+
     responses_train = torch.from_numpy(responses_train)
     responses_train = responses_train.int()
     responses_train_lens = torch.from_numpy(responses_train_lens)
