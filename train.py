@@ -79,15 +79,19 @@ def main(args):
 
     # We need the lengths as the numpy array is of fixed size but each sentence is of different length
     # so we need to know how many redundant zeros we have in each sample.
-    responses_train, responses_train_lens = text_to_array(args.train_resps_path, args.wlist_path)
-    responses_valid, responses_valid_lens = text_to_array(args.valid_resps_path, args.wlist_path)
-    topics, topics_lens = text_to_array(args.unique_prompts_path, args.wlist_path)
+    responses_train, responses_train_lens, deleted_resp_train_elems = text_to_array(args.train_resps_path, args.wlist_path)
+    responses_valid, responses_valid_lens, deleted_resp_valid_elems = text_to_array(args.valid_resps_path, args.wlist_path)
+    topics, topics_lens, _ = text_to_array(args.unique_prompts_path, args.wlist_path)
 
     # For dynamic shuffling to generate the negative samples each epoch, we need to make sure the source
     # and destination prompts are not the same.
     prompts_train_idxs = np.loadtxt(args.train_prompts_idxs_path, dtype=np.int32)
     prompts_valid_idxs = np.loadtxt(args.valid_prompts_idxs_path, dtype=np.int32)
     topics_dist = np.loadtxt(args.unique_prompts_distribution_path, dtype=np.int32)
+
+    # Remove prompts corresponding to deleted responses
+    np.delete(prompts_train_idxs, deleted_resp_train_elems, 0)
+    np.delete(prompts_valid_idxs, deleted_resp_valid_elems, 0)
 
     #Temp
     print(prompts_train_idxs.shape)

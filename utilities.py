@@ -24,22 +24,25 @@ def _load_text(data_path, words_index_path):
     with open(data_path, 'r') as f:
         data = []
         slens = []
+        elems_to_remove = []
+        count = 0
         for line in f.readlines():
             line = line.replace('\n', '').split()
             if len(line) == 0:
-                pass  
+                elems_to_remove.append(count)  
             else:
                 data.append(line)
                 slens.append(len(line))
+            count+=1
     data = np.asarray(_word_to_id(data, words_index_path))
-    return data, slens
+    return data, slens, elems_to_remove
 
 def text_to_array(data_path, words_index_path):
-    data, slens = _load_text(data_path, words_index_path)
+    data, slens, elems_to_remove = _load_text(data_path, words_index_path)
 
     slens = np.asarray(slens, dtype=np.int32)
     processed_data = np.zeros((len(slens), np.max(slens)), dtype=np.int32)
     for i, _ in zip(range(len(data)), slens):
         processed_data[i][0:slens[i]] = data[i]
 
-    return processed_data, slens    
+    return processed_data, slens, elems_to_remove    
