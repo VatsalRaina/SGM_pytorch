@@ -1,4 +1,5 @@
 import numpy as np
+import os
 
 def _create_word_id_dict(words_index_path):
     dict = {}
