@@ -12,7 +12,7 @@ def _create_word_id_dict(words_index_path):
 
 def _word_to_id(data, words_index_path):
     vocab = _create_word_id_dict(words_index_path)
-    return [[vocab[word] if word not in vocab else 0 for word in line] for line in data]
+    return [[vocab[word] if word in vocab else 0 for word in line] for line in data]
 
 def _load_text(data_path, words_index_path):
     """
