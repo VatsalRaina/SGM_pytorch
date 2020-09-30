@@ -49,13 +49,13 @@ def _shuffle(p_id, r, r_len, topics_dist, NUM_TOPICS):
     y_true_second = np.zeros(bs)
     y_true = np.concatenate(y_true_first, y_true_second)
     y_true = torch.from_numpy(y_true)
-    y_true = y_true.int32()
+    y_true = y_true.float()
     new_p_id = np.random.choice(NUM_TOPICS, bs, p=topics_dist)
     for i in range(bs):
         while (new_p_id[i] == p_id[i]):
             new_p_id[i] = np.random.choice(NUM_TOPICS, 1, p=topics_dist)
     new_p_id = torch.from_numpy(new_p_id)
-    new_p_id = new_p_id.int32()
+    new_p_id = new_p_id.int()
     p_id = torch.cat((p_id, new_p_id), 0)
     r = torch.cat((r, r), 0)
     r_len = torch.cat((r_len, r_len), 0)
@@ -90,24 +90,24 @@ def main(args):
     topics_dist = np.loadtxt(args.unique_prompts_distribution_path, dtype=np.int32)
 
     responses_train = torch.from_numpy(responses_train)
-    responses_train = responses_train.int32()
+    responses_train = responses_train.int()
     responses_train_lens = torch.from_numpy(responses_train_lens)
-    responses_train_lens = responses_train_lens.int32()
+    responses_train_lens = responses_train_lens.int()
 
     responses_valid = torch.from_numpy(responses_valid)
-    responses_valid = responses_valid.int32()
+    responses_valid = responses_valid.int()
     responses_valid_lens = torch.from_numpy(responses_valid_lens)
-    responses_valid_lens = responses_valid_lens.int32()
+    responses_valid_lens = responses_valid_lens.int()
 
     topics = torch.from_numpy(topics)
-    topics = topics.int32()
+    topics = topics.int()
     topics_lens = torch.from_numpy(topics_lens)
-    topics_lens = topics_lens.int32()
+    topics_lens = topics_lens.int()
 
     prompts_train_idxs = torch.from_numpy(prompts_train_idxs)
-    prompts_train_idxs = prompts_train_idxs.int32()
+    prompts_train_idxs = prompts_train_idxs.int()
     prompts_valid_idxs = torch.from_numpy(prompts_valid_idxs)
-    prompts_valid_idxs = prompts_valid_idxs.int32()
+    prompts_valid_idxs = prompts_valid_idxs.int()
 
     # Store all training dataset in a single wrapped tensor
     train_ds = TensorDataset(prompts_train_idxs, responses_train, responses_train_lens)
