@@ -87,7 +87,7 @@ def main(args):
     # and destination prompts are not the same.
     prompts_train_idxs = np.loadtxt(args.train_prompts_idxs_path, dtype=np.int32)
     prompts_valid_idxs = np.loadtxt(args.valid_prompts_idxs_path, dtype=np.int32)
-    topics_dist = np.loadtxt(args.unique_prompts_dist_path, dtype=np.int32)
+    topics_dist = np.loadtxt(args.unique_prompts_distribution_path, dtype=np.int32)
 
     responses_train = torch.from_numpy(responses_train)
     responses_train = responses_train.int32()
