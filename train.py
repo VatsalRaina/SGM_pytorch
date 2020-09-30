@@ -123,7 +123,7 @@ def main(args):
     EMBD_DIM = args.embd_dim
     IMG_WIDTH = args.IMG_WIDTH
     IMG_HEIGHT = args.IMG_HEIGHT
-    hyperparameters = {'VOCAB_SIZE': VOCAB_SIZE, 'EMBD_DIM': EMBD_DIM. 'IMG_WIDTH': IMG_WIDTH, 'IMG_HEIGHT': IMG_HEIGHT}
+    hyperparameters = {'VOCAB_SIZE': VOCAB_SIZE, 'EMBD_DIM': EMBD_DIM, 'IMG_WIDTH': IMG_WIDTH, 'IMG_HEIGHT': IMG_HEIGHT}
     my_model = SimilarityGridModel(hyperparameters)
     my_model = my_model.float()
 
