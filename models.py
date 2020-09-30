@@ -86,7 +86,7 @@ class SimilarityGridModel(torch.nn.Module):
         # So now the dimensions are : [batch_size, num_channels, max_p_len, max_r_len]
         # Create the bounding boxes for cropping
         zero_zero = torch.zeros([batch_size, 2])
-        zero_max = torch.cat(torch.unsqueeze(torch.zeros(batch_size)), torch.unsqueeze(r_len, 1)), 1)
+        zero_max = torch.cat(torch.unsqueeze(torch.zeros(batch_size)), torch.unsqueeze(r_len, 1), 1)
         max_max = torch.cat((torch.unsqueeze(p_len, 1), torch.unsqueeze(r_len, 1)), 1)
         max_zero = torch.cat((torch.unsqueeze(p_len, 1), torch.unsqueeze(torch.zeros(batch_size))), 1)
         boxes = torch.cat((torch.unsqueeze(zero_zero, 1), torch.unsqueeze(zero_max, 1), torch.unsqueeze(max_max, 1), torch.unsqueeze(max_zero, 1)), 1)
