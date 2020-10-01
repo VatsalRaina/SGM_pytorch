@@ -108,8 +108,10 @@ def main(args):
 
     topics = torch.from_numpy(topics)
     topics = topics.long()
+    topics = topics.to(device)
     topics_lens = torch.from_numpy(topics_lens)
     topics_lens = topics_lens.long()
+    topics_lens = topics_lens.to(device)
 
     prompts_train_idxs = torch.from_numpy(prompts_train_idxs)
     prompts_train_idxs = prompts_train_idxs.long()
@@ -133,6 +135,7 @@ def main(args):
     hyperparameters = {'VOCAB_SIZE': VOCAB_SIZE, 'EMBD_DIM': EMBD_DIM, 'IMG_WIDTH': IMG_WIDTH, 'IMG_HEIGHT': IMG_HEIGHT}
     my_model = SimilarityGridModel(hyperparameters)
     my_model = my_model.float()
+    my_model = my_model.to(device)
 
     criterion = torch.nn.BCELoss()
     optimizer = torch.optim.SGD(my_model.parameters(), lr = args.learning_rate)
@@ -142,14 +145,18 @@ def main(args):
         total_loss = 0
         counter = 0
         for p_id, r, r_len in train_dl:
+            # Move to gpu
+            p_id, r, r_len = p_id.to(device), r.to(device), r_len.to(device)
             # Perform dynamic shuffling
             p_id, r, r_len, y_true = _shuffle(p_id, r, r_len, topics_dist, NUM_TOPICS)
 
             # Load the actual prompts using the topics
             p, p_len = _get_prompts(p_id, topics, topics_lens)
+            p, p_len = p.to(device), p_len.to(device)
 
             # Forward pass
             y_pred = my_model.forward(p, p_len, r, r_len, args.batch_size*2)
+            y_pred = y_pred.to(device)
             # Compute loss
             loss = criterion(y_pred, y_true)
 
@@ -167,9 +174,12 @@ def main(args):
         total_loss = 0
         counter = 0
         for p_id, r, r_len in valid_dl:
+            p_id, r, r_len = p_id.to(device), r.to(device), r_len.to(device)
             p_id, r, r_len, y_true = _shuffle(p_id, r, r_len, topics_dist, NUM_TOPICS)
             p, p_len = _get_prompts(p_id, topics, topics_lens)
+            p, p_len = p.to(device), p_len.to(device)
             y_pred = my_model.forward(p, p_len, r, r_len, args.batch_size*2)
+            y_pred = y_pred.to(device)
             loss = criterion(y_pred, y_true)
             total_loss += loss.item()
             counter += 1
