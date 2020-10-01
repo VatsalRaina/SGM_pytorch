@@ -59,6 +59,8 @@ class SimilarityGridModel(torch.nn.Module):
 
         p_emb2 = self.wordEmbd2(p)
         r_emb2 = self.wordEmbd2(r)
+        p_emb2 = p_emb2[:, 0:max_p_len, :]
+        r_emb2 = r_emb2[:, 0:max_r_len, :]
 
         r_emb2 = r_emb2.repeat(1, max_p_len, 1)
         r_emb2 = torch.reshape(r_emb2, (batch_size, max_p_len, max_r_len, self.hyps['EMBD_DIM']))
@@ -73,6 +75,8 @@ class SimilarityGridModel(torch.nn.Module):
 
         p_emb3 = self.wordEmbd3(p)
         r_emb3 = self.wordEmbd3(r)
+        p_emb3 = p_emb3[:, 0:max_p_len, :]
+        r_emb3 = r_emb3[:, 0:max_r_len, :]
 
         r_emb3 = r_emb3.repeat(1, max_p_len, 1)
         r_emb3 = torch.reshape(r_emb3, (batch_size, max_p_len, max_r_len, self.hyps['EMBD_DIM']))
