@@ -85,8 +85,8 @@ def main(args):
 
     # For dynamic shuffling to generate the negative samples each epoch, we need to make sure the source
     # and destination prompts are not the same.
-    prompts_train_idxs = np.loadtxt(args.train_prompts_idxs_path, dtype=np.int32)
-    prompts_valid_idxs = np.loadtxt(args.valid_prompts_idxs_path, dtype=np.int32)
+    prompts_train_idxs = np.loadtxt(args.train_prompts_idxs_path, dtype=np.int64)
+    prompts_valid_idxs = np.loadtxt(args.valid_prompts_idxs_path, dtype=np.int64)
     topics_dist = np.loadtxt(args.unique_prompts_distribution_path, dtype=np.int32)
 
     # Normalise
