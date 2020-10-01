@@ -97,19 +97,19 @@ def main(args):
     prompts_valid_idxs = np.delete(prompts_valid_idxs, deleted_resp_valid_elems)
 
     responses_train = torch.from_numpy(responses_train)
-    responses_train = responses_train.int()
+    responses_train = responses_train.long()
     responses_train_lens = torch.from_numpy(responses_train_lens)
-    responses_train_lens = responses_train_lens.int()
+    responses_train_lens = responses_train_lens.long()
 
     responses_valid = torch.from_numpy(responses_valid)
-    responses_valid = responses_valid.int()
+    responses_valid = responses_valid.long()
     responses_valid_lens = torch.from_numpy(responses_valid_lens)
-    responses_valid_lens = responses_valid_lens.int()
+    responses_valid_lens = responses_valid_lens.long()
 
     topics = torch.from_numpy(topics)
-    topics = topics.int()
+    topics = topics.long()
     topics_lens = torch.from_numpy(topics_lens)
-    topics_lens = topics_lens.int()
+    topics_lens = topics_lens.long()
 
     prompts_train_idxs = torch.from_numpy(prompts_train_idxs)
     prompts_train_idxs = prompts_train_idxs.long()
