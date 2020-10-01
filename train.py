@@ -112,9 +112,9 @@ def main(args):
     topics_lens = topics_lens.int()
 
     prompts_train_idxs = torch.from_numpy(prompts_train_idxs)
-    prompts_train_idxs = prompts_train_idxs.int()
+    prompts_train_idxs = prompts_train_idxs.long()
     prompts_valid_idxs = torch.from_numpy(prompts_valid_idxs)
-    prompts_valid_idxs = prompts_valid_idxs.int()
+    prompts_valid_idxs = prompts_valid_idxs.long()
 
     # Store all training dataset in a single wrapped tensor
     train_ds = TensorDataset(prompts_train_idxs, responses_train, responses_train_lens)
