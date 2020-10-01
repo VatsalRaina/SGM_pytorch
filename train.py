@@ -89,6 +89,9 @@ def main(args):
     prompts_valid_idxs = np.loadtxt(args.valid_prompts_idxs_path, dtype=np.int32)
     topics_dist = np.loadtxt(args.unique_prompts_distribution_path, dtype=np.int32)
 
+    # Normalise
+    topics_dist = topics_dist / np.linalg.norm(topics_dist, 1)
+
     # Remove prompts corresponding to deleted responses
     prompts_train_idxs = np.delete(prompts_train_idxs, deleted_resp_train_elems)
     prompts_valid_idxs = np.delete(prompts_valid_idxs, deleted_resp_valid_elems)
