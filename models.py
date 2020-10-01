@@ -43,9 +43,7 @@ class SimilarityGridModel(torch.nn.Module):
         p_emb = p_emb[:, 0:max_p_len, :]
         r_emb = r_emb[:, 0:max_r_len, :]
 
-        print(r_emb.size())
         r_emb = r_emb.repeat(1, max_p_len, 1)
-        print(r_emb.size())
         r_emb = torch.reshape(r_emb, (batch_size, max_p_len, max_r_len, self.hyps['EMBD_DIM']))
         r_emb = torch.transpose(r_emb, 1, 2)
 
