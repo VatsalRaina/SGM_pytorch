@@ -39,6 +39,10 @@ class SimilarityGridModel(torch.nn.Module):
         p_emb = self.wordEmbd(p)
         r_emb = self.wordEmbd(r)
 
+        # Cut-off excess words
+        p_emb = p_emb[:, 0:max_p_len, :]
+        r_emb = r_emb[:, 0:max_r_len, :]
+
         print(r_emb.size())
         r_emb = r_emb.repeat(1, max_p_len, 1)
         print(r_emb.size())
