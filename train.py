@@ -47,7 +47,7 @@ def _shuffle(p_id, r, r_len, topics_dist, NUM_TOPICS):
     bs = list(p_id.size())[0]
     y_true_first = np.ones(bs, dtype=int)
     y_true_second = np.zeros(bs, dtype=int)
-    y_true = np.concatenate(y_true_first, y_true_second)
+    y_true = np.concatenate([y_true_first, y_true_second])
     y_true = torch.from_numpy(y_true)
     y_true = y_true.float()
     new_p_id = np.random.choice(NUM_TOPICS, bs, p=topics_dist)
