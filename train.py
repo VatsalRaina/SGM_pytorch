@@ -90,14 +90,8 @@ def main(args):
     topics_dist = np.loadtxt(args.unique_prompts_distribution_path, dtype=np.int32)
 
     # Remove prompts corresponding to deleted responses
-    print(deleted_resp_train_elems)
     prompts_train_idxs = np.delete(prompts_train_idxs, deleted_resp_train_elems)
     prompts_valid_idxs = np.delete(prompts_valid_idxs, deleted_resp_valid_elems)
-
-    #Temp
-    print(prompts_train_idxs.shape)
-    print(responses_train.shape)
-    print(responses_train_lens.shape)
 
     responses_train = torch.from_numpy(responses_train)
     responses_train = responses_train.int()
@@ -131,8 +125,8 @@ def main(args):
     NUM_TOPICS = args.num_topics
     VOCAB_SIZE = args.vocab_size
     EMBD_DIM = args.embd_dim
-    IMG_WIDTH = args.IMG_WIDTH
-    IMG_HEIGHT = args.IMG_HEIGHT
+    IMG_WIDTH = args.img_width
+    IMG_HEIGHT = args.img_height
     hyperparameters = {'VOCAB_SIZE': VOCAB_SIZE, 'EMBD_DIM': EMBD_DIM, 'IMG_WIDTH': IMG_WIDTH, 'IMG_HEIGHT': IMG_HEIGHT}
     my_model = SimilarityGridModel(hyperparameters)
     my_model = my_model.float()

@@ -29,7 +29,6 @@ def _load_text(data_path, words_index_path):
         for line in f.readlines():
             line = line.replace('\n', '').split()
             if len(line) == 0:
-                print("IN HERE")
                 elems_to_remove.append(count)  
             else:
                 data.append(line)
