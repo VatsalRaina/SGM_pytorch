@@ -45,8 +45,8 @@ def get_default_device():
 def _shuffle(p_id, r, r_len, topics_dist, NUM_TOPICS):
     # Dynamic shuffling in order to generate negative samples
     bs = list(p_id.size())[0]
-    y_true_first = np.ones(bs)
-    y_true_second = np.zeros(bs)
+    y_true_first = np.ones(bs, dtype=int)
+    y_true_second = np.zeros(bs, dtype=int)
     y_true = np.concatenate(y_true_first, y_true_second)
     y_true = torch.from_numpy(y_true)
     y_true = y_true.float()
