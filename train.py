@@ -164,7 +164,6 @@ def main(args):
             p, p_len = p.to(device), p_len.to(device)
 
             # Forward pass
-            batch_size = p
             y_pred = my_model.forward(p, p_len, r, r_len, batch_size*2)
             y_pred = y_pred.to(device)
             # Compute loss
