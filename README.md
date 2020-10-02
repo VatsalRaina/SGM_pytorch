@@ -3,6 +3,6 @@
 
 ## Dependencies
 ### Minimum python3.6 required
-### pip install pytorch
+### pip install torch==1.4.0 torchvision==0.5.0 -f https://download.pytorch.org/whl/cu100/torch_stable.html -> using CUDA 10.0
 ### pip install numpy
-### pip install kornia -> computer vision library for pytorch
+### pip install kornia==0.2.2 -> computer vision library for pytorch
