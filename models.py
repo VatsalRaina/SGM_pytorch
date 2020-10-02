@@ -5,11 +5,12 @@ import torchvision.models as models
 import kornia
 
 class SimilarityGridModel(torch.nn.Module):
-    def __init__(self, hyperparameters):
+    def __init__(self, hyperparameters, device):
 
         super(SimilarityGridModel, self).__init__()
 
         self.hyps = hyperparameters
+        self.device = device
 
         self.wordEmbd = torch.nn.Embedding(self.hyps['VOCAB_SIZE'], self.hyps['EMBD_DIM'])
         self.wordEmbd2 = torch.nn.Embedding(self.hyps['VOCAB_SIZE'], self.hyps['EMBD_DIM'])
@@ -93,10 +94,10 @@ class SimilarityGridModel(torch.nn.Module):
         grid = torch.transpose(grid, 1,3)
         # So now the dimensions are : [batch_size, num_channels, max_p_len, max_r_len]
         # Create the bounding boxes for cropping
-        zero_zero = torch.zeros([batch_size, 2])
-        zero_max = torch.cat((torch.unsqueeze(torch.zeros(batch_size), 1), torch.unsqueeze(r_len, 1)), 1)
+        zero_zero = torch.zeros([batch_size, 2]).to(self.device)
+        zero_max = torch.cat((torch.unsqueeze(torch.zeros(batch_size).to(self.device), 1), torch.unsqueeze(r_len, 1)), 1)
         max_max = torch.cat((torch.unsqueeze(p_len, 1), torch.unsqueeze(r_len, 1)), 1)
-        max_zero = torch.cat((torch.unsqueeze(p_len, 1), torch.unsqueeze(torch.zeros(batch_size), 1)), 1)
+        max_zero = torch.cat((torch.unsqueeze(p_len, 1), torch.unsqueeze(torch.zeros(batch_size).to(device), 1)), 1)
         boxes = torch.cat((torch.unsqueeze(zero_zero, 1), torch.unsqueeze(zero_max, 1), torch.unsqueeze(max_max, 1), torch.unsqueeze(max_zero, 1)), 1)
         grid_proc = kornia.crop_and_resize(grid, boxes, [self.hyps['IMG_WIDTH'], self.hyps['IMG_HEIGHT']])
 

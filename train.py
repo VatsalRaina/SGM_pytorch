@@ -145,7 +145,7 @@ def main(args):
     IMG_WIDTH = args.img_width
     IMG_HEIGHT = args.img_height
     hyperparameters = {'VOCAB_SIZE': VOCAB_SIZE, 'EMBD_DIM': EMBD_DIM, 'IMG_WIDTH': IMG_WIDTH, 'IMG_HEIGHT': IMG_HEIGHT}
-    my_model = SimilarityGridModel(hyperparameters)
+    my_model = SimilarityGridModel(hyperparameters, device)
     my_model = my_model.float()
     my_model = my_model.to(device)
 
