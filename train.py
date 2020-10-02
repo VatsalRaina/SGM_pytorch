@@ -60,7 +60,7 @@ def _shuffle(p_id, r, r_len, topics_dist, NUM_TOPICS, device):
     p_id = torch.cat((p_id, new_p_id), 0)
     r = torch.cat((r, r), 0)
     r_len = torch.cat((r_len, r_len), 0)
-    return p_id, r, r_len, y_true
+    return p_id, r, r_len, y_true, bs
     
 
 def _get_prompts(p_id, topics, topics_lens):
@@ -157,14 +157,15 @@ def main(args):
             # Move to gpu
             p_id, r, r_len = p_id.to(device), r.to(device), r_len.to(device)
             # Perform dynamic shuffling
-            p_id, r, r_len, y_true = _shuffle(p_id, r, r_len, topics_dist, NUM_TOPICS, device)
+            p_id, r, r_len, y_true, batch_size = _shuffle(p_id, r, r_len, topics_dist, NUM_TOPICS, device)
 
             # Load the actual prompts using the topics
             p, p_len = _get_prompts(p_id, topics, topics_lens)
             p, p_len = p.to(device), p_len.to(device)
 
             # Forward pass
-            y_pred = my_model.forward(p, p_len, r, r_len, args.batch_size*2)
+            batch_size = p
+            y_pred = my_model.forward(p, p_len, r, r_len, batch_size*2)
             y_pred = y_pred.to(device)
             # Compute loss
             loss = criterion(y_pred, y_true)
@@ -184,10 +185,10 @@ def main(args):
         counter = 0
         for p_id, r, r_len in valid_dl:
             p_id, r, r_len = p_id.to(device), r.to(device), r_len.to(device)
-            p_id, r, r_len, y_true = _shuffle(p_id, r, r_len, topics_dist, NUM_TOPICS, device)
+            p_id, r, r_len, y_true, batch_size = _shuffle(p_id, r, r_len, topics_dist, NUM_TOPICS, device)
             p, p_len = _get_prompts(p_id, topics, topics_lens)
             p, p_len = p.to(device), p_len.to(device)
-            y_pred = my_model.forward(p, p_len, r, r_len, args.batch_size*2)
+            y_pred = my_model.forward(p, p_len, r, r_len, batch_size*2)
             y_pred = y_pred.to(device)
             loss = criterion(y_pred, y_true)
             total_loss += loss.item()
