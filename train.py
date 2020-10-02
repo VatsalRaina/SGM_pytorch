@@ -38,6 +38,7 @@ parser.add_argument('--save_path', type=str, help='Load path to which trained mo
 # Set device
 def get_default_device():
     if torch.cuda.is_available():
+        print("Got CUDA!")
         return torch.device('cuda')
     else:
         return torch.device('cpu')
