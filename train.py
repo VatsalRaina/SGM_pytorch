@@ -78,6 +78,9 @@ def main(args):
     torch.manual_seed(args.seed)
     device = get_default_device()
 
+    # TEMP
+    device = torch.device('cuda')
+
     # We need the lengths as the numpy array is of fixed size but each sentence is of different length
     # so we need to know how many redundant zeros we have in each sample.
     responses_train, responses_train_lens, deleted_resp_train_elems = text_to_array(args.train_resps_path, args.wlist_path)
