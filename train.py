@@ -120,12 +120,12 @@ def main(args):
     prompts_valid_idxs = prompts_valid_idxs.long()
 
     # TEMP!!!
-    prompts_train_idxs = prompts_train_idxs[:1000]
-    responses_train = responses_train[:1000]
-    responses_train_lens = responses_train_lens[:1000]
-    prompts_valid_idxs = prompts_valid_idxs[:1000]
-    responses_valid = responses_valid[:1000]
-    responses_valid_lens = responses_valid_lens[:1000]    
+    # prompts_train_idxs = prompts_train_idxs[:1000]
+    # responses_train = responses_train[:1000]
+    # responses_train_lens = responses_train_lens[:1000]
+    # prompts_valid_idxs = prompts_valid_idxs[:1000]
+    # responses_valid = responses_valid[:1000]
+    # responses_valid_lens = responses_valid_lens[:1000]    
 
     # Store all training dataset in a single wrapped tensor
     train_ds = TensorDataset(prompts_train_idxs, responses_train, responses_train_lens)
