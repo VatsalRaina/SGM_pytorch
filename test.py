@@ -65,7 +65,7 @@ def main(args):
     y_pred_all = []
     for p, p_len, r, r_len in dl:
         p, p_len, r, r_len = p.to(device), p_len.to(device), r.to(device), r_len.to(device)
-        batch_size = y_true.size()
+        batch_size = y_true.shape[0]
         y_pred = model.forward(p, p_len, r, r_len, batch_size)
         y_pred = y_pred.detach().numpy().tolist()
         y_pred_all += y_pred
