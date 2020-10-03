@@ -48,11 +48,11 @@ def main(args):
     y_true = np.loadtxt(args.labels_path, dtype=np.float)
 
     #TEMP!!!
-    prompts = prompts[:1000]
-    prompts_lens = prompts_lens[:1000]
-    responses = responses[:1000]
-    responses_lens = responses_lens[:1000]
-    y_true = y_true[:1000]
+    # prompts = prompts[:1000]
+    # prompts_lens = prompts_lens[:1000]
+    # responses = responses[:1000]
+    # responses_lens = responses_lens[:1000]
+    # y_true = y_true[:1000]
 
     prompts = torch.from_numpy(prompts).long()
     prompts_lens = torch.from_numpy(prompts_lens).long()
