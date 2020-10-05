@@ -109,5 +109,6 @@ class SimilarityGridModel(torch.nn.Module):
 
         # Pass through resnet-152
         y_pred = self.resnet152(grid_proc)
+        y_pred = torch.sigmoid(self.final_layer(y_1000))
 
         return y_pred
