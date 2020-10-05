@@ -22,6 +22,7 @@ class SimilarityGridModel(torch.nn.Module):
         # self.final_layer = torch.nn.Linear(1000, 1)
 
         self.resnet152 = models.resnet152
+        self.resnet152.train()
 
 
     def _cosine_dist(self, xx, yy, ax):
@@ -108,7 +109,7 @@ class SimilarityGridModel(torch.nn.Module):
         # y_pred = torch.sigmoid(self.final_layer(y_1000))
 
         # Pass through resnet-152
-        y_pred = self.resnet152(grid_proc)
+        y_1000 = self.resnet152(grid_proc)
         y_pred = torch.sigmoid(self.final_layer(y_1000))
 
         return y_pred
