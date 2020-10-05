@@ -19,11 +19,10 @@ class SimilarityGridModel(torch.nn.Module):
         # self.resnet18 = models.resnet18()
         # self.resnet18.train()
 
-        # self.final_layer = torch.nn.Linear(1000, 1)
-
         self.resnet152 = models.resnet152()
         self.resnet152.train()
 
+        elf.final_layer = torch.nn.Linear(1000, 1)
 
     def _cosine_dist(self, xx, yy, ax):
         cos = torch.nn.CosineSimilarity(dim=ax, eps=1e-6)
