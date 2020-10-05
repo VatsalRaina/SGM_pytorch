@@ -21,7 +21,7 @@ class SimilarityGridModel(torch.nn.Module):
 
         # self.final_layer = torch.nn.Linear(1000, 1)
 
-        self.resnet152 = models.resnet152
+        self.resnet152 = models.resnet152()
         self.resnet152.train()
 
 
