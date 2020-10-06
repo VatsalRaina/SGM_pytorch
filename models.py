@@ -12,8 +12,6 @@ class SimilarityGridModel(torch.nn.Module):
         self.hyps = hyperparameters
         self.device = device
 
-        self.dropout = torch.nn.Dropout(dropout)
-
         self.wordEmbd = torch.nn.Embedding(self.hyps['VOCAB_SIZE'], self.hyps['EMBD_DIM'])
         self.wordEmbd2 = torch.nn.Embedding(self.hyps['VOCAB_SIZE'], self.hyps['EMBD_DIM'])
         self.wordEmbd3 = torch.nn.Embedding(self.hyps['VOCAB_SIZE'], self.hyps['EMBD_DIM'])
