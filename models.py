@@ -12,15 +12,17 @@ class SimilarityGridModel(torch.nn.Module):
         self.hyps = hyperparameters
         self.device = device
 
+        self.dropout = torch.nn.Dropout(dropout)
+
         self.wordEmbd = torch.nn.Embedding(self.hyps['VOCAB_SIZE'], self.hyps['EMBD_DIM'])
         self.wordEmbd2 = torch.nn.Embedding(self.hyps['VOCAB_SIZE'], self.hyps['EMBD_DIM'])
         self.wordEmbd3 = torch.nn.Embedding(self.hyps['VOCAB_SIZE'], self.hyps['EMBD_DIM'])
 
-        # self.resnet18 = models.resnet18()
-        # self.resnet18.train()
+        self.resnet18 = models.resnet18()
+        self.resnet18.train()
 
-        self.resnet152 = models.resnet152()
-        self.resnet152.train()
+        # self.resnet152 = models.resnet152()
+        # self.resnet152.train()
 
         self.final_layer = torch.nn.Linear(1000, 1)
 
@@ -28,13 +30,15 @@ class SimilarityGridModel(torch.nn.Module):
         cos = torch.nn.CosineSimilarity(dim=ax, eps=1e-6)
         return cos(xx, yy)
 
-    def forward(self, p, p_len, r, r_len, batch_size):
+    def forward(self, p, p_len, r, r_len, batch_size, dropout):
         # Embed all words with learnable word embeddings for each word in vocabulary (maybe try w2vec)
         # Construct similarity grid (with multiple channels)
         # Pass through resnet 
 
         # Possibly try passing different 3-channel grids through different resnets
         # i.e. explore the idea behind hierarchical ensembling at every level in a given model
+
+        Dropout = torch.nn.Dropout(dropout)
 
         max_p_len = torch.max(p_len)
         max_r_len = torch.max(r_len)
@@ -45,6 +49,10 @@ class SimilarityGridModel(torch.nn.Module):
         # Cut-off excess words
         p_emb = p_emb[:, 0:max_p_len, :]
         r_emb = r_emb[:, 0:max_r_len, :]
+
+        # Apply dropout
+        p_emb = Dropout(p_emb)
+        r_emb = Dropout(r_emb)
 
         r_emb = r_emb.repeat(1, max_p_len, 1)
         r_emb = torch.reshape(r_emb, (batch_size, max_p_len, max_r_len, self.hyps['EMBD_DIM']))
@@ -63,6 +71,10 @@ class SimilarityGridModel(torch.nn.Module):
         p_emb2 = p_emb2[:, 0:max_p_len, :]
         r_emb2 = r_emb2[:, 0:max_r_len, :]
 
+        # Apply dropout
+        p_emb2 = Dropout(p_emb2)
+        r_emb2 = Dropout(r_emb2)
+
         r_emb2 = r_emb2.repeat(1, max_p_len, 1)
         r_emb2 = torch.reshape(r_emb2, (batch_size, max_p_len, max_r_len, self.hyps['EMBD_DIM']))
         r_emb2 = torch.transpose(r_emb2, 1, 2)
@@ -78,6 +90,10 @@ class SimilarityGridModel(torch.nn.Module):
         r_emb3 = self.wordEmbd3(r)
         p_emb3 = p_emb3[:, 0:max_p_len, :]
         r_emb3 = r_emb3[:, 0:max_r_len, :]
+
+        # Apply dropout
+        p_emb3 = Dropout(p_emb3)
+        r_emb3 = Dropout(r_emb3)
 
         r_emb3 = r_emb3.repeat(1, max_p_len, 1)
         r_emb3 = torch.reshape(r_emb3, (batch_size, max_p_len, max_r_len, self.hyps['EMBD_DIM']))
@@ -104,11 +120,11 @@ class SimilarityGridModel(torch.nn.Module):
         grid_proc = kornia.crop_and_resize(grid, boxes, [self.hyps['IMG_WIDTH'], self.hyps['IMG_HEIGHT']])
 
         # Pass through resnet-18
-        # y_1000 = self.resnet18(grid_proc)
-        # y_pred = torch.sigmoid(self.final_layer(y_1000))
+        y_1000 = self.resnet18(grid_proc)
+        y_pred = torch.sigmoid(self.final_layer(y_1000))
 
         # Pass through resnet-152
-        y_1000 = self.resnet152(grid_proc)
-        y_pred = torch.sigmoid(self.final_layer(y_1000))
+        # y_1000 = self.resnet152(grid_proc)
+        # y_pred = torch.sigmoid(self.final_layer(y_1000))
 
         return y_pred

@@ -16,7 +16,7 @@ parser = argparse.ArgumentParser(description='Get all command line arguments.')
 parser.add_argument('--batch_size', type=int, default=100, help='Specify the training batch size')
 parser.add_argument('--learning_rate', type=float, default=1e-3, help='Specify the initial learning rate')
 parser.add_argument('--lr_decay', type=float, default=0.85, help='Specify the learning rate decay rate')
-parser.add_argument('--dropout', type=float, default=1.0, help='Specify the dropout keep probability')
+parser.add_argument('--dropout', type=float, default=0.2, help='Specify the dropout rate')
 parser.add_argument('--n_epochs', type=int, default=1, help='Specify the number of epochs to train for')
 parser.add_argument('--n_samples', type=int, default=1, help='Specify the number of negative samples to take')
 parser.add_argument('--seed', type=int, default=1, help='Specify the global random seed')
@@ -164,7 +164,7 @@ def main(args):
             p, p_len = p.to(device), p_len.to(device)
 
             # Forward pass
-            y_pred = my_model.forward(p, p_len, r, r_len, batch_size*2)
+            y_pred = my_model.forward(p, p_len, r, r_len, batch_size*2, args.dropout)
             y_pred = y_pred.to(device)
             # Compute loss
             loss = criterion(y_pred, y_true)
@@ -176,7 +176,7 @@ def main(args):
 
             total_loss += loss.item()
             counter += 1
-            print(counter)
+            # print(counter)
         trn_loss = total_loss / counter
 
         # Calculate dev set loss
@@ -187,7 +187,7 @@ def main(args):
             p_id, r, r_len, y_true, batch_size = _shuffle(p_id, r, r_len, topics_dist, NUM_TOPICS, device)
             p, p_len = _get_prompts(p_id, topics, topics_lens)
             p, p_len = p.to(device), p_len.to(device)
-            y_pred = my_model.forward(p, p_len, r, r_len, batch_size*2)
+            y_pred = my_model.forward(p, p_len, r, r_len, batch_size*2, 1.0)
             y_pred = y_pred.to(device)
             loss = criterion(y_pred, y_true)
             total_loss += loss.item()
