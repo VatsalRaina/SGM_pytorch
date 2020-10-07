@@ -16,11 +16,11 @@ class SimilarityGridModel(torch.nn.Module):
         self.wordEmbd2 = torch.nn.Embedding(self.hyps['VOCAB_SIZE'], self.hyps['EMBD_DIM'])
         self.wordEmbd3 = torch.nn.Embedding(self.hyps['VOCAB_SIZE'], self.hyps['EMBD_DIM'])
 
-        self.resnet18 = models.resnet18()
-        self.resnet18.train()
+        # self.resnet18 = models.resnet18()
+        # self.resnet18.train()
 
-        # self.resnet152 = models.resnet152()
-        # self.resnet152.train()
+        self.resnet152 = models.resnet152()
+        self.resnet152.train()
 
         self.final_layer = torch.nn.Linear(1000, 1)
 
@@ -118,11 +118,11 @@ class SimilarityGridModel(torch.nn.Module):
         grid_proc = kornia.crop_and_resize(grid, boxes, [self.hyps['IMG_WIDTH'], self.hyps['IMG_HEIGHT']])
 
         # Pass through resnet-18
-        y_1000 = self.resnet18(grid_proc)
-        y_pred = torch.sigmoid(self.final_layer(y_1000))
+        # y_1000 = self.resnet18(grid_proc)
+        # y_pred = torch.sigmoid(self.final_layer(y_1000))
 
         # Pass through resnet-152
-        # y_1000 = self.resnet152(grid_proc)
-        # y_pred = torch.sigmoid(self.final_layer(y_1000))
+        y_1000 = self.resnet152(grid_proc)
+        y_pred = torch.sigmoid(self.final_layer(y_1000))
 
         return y_pred
