@@ -187,7 +187,7 @@ def main(args):
             p_id, r, r_len, y_true, batch_size = _shuffle(p_id, r, r_len, topics_dist, NUM_TOPICS, device)
             p, p_len = _get_prompts(p_id, topics, topics_lens)
             p, p_len = p.to(device), p_len.to(device)
-            y_pred = my_model.forward(p, p_len, r, r_len, batch_size*2, 1.0)
+            y_pred = my_model.forward(p, p_len, r, r_len, batch_size*2, 0.0)
             y_pred = y_pred.to(device)
             loss = criterion(y_pred, y_true)
             total_loss += loss.item()
