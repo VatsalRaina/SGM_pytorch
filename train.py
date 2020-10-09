@@ -147,7 +147,7 @@ def main(args):
     my_model = my_model.to(device)
 
     criterion = torch.nn.BCELoss()
-    optimizer = torch.optim.Adam(my_model.parameters(), lr = args.learning_rate)
+    optimizer = torch.optim.SGD(my_model.parameters(), lr = args.learning_rate)
 
     for epoch in range(args.n_epochs):
         my_model.train()
