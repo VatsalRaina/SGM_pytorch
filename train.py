@@ -22,7 +22,7 @@ parser.add_argument('--n_samples', type=int, default=1, help='Specify the number
 parser.add_argument('--seed', type=int, default=1, help='Specify the global random seed')
 parser.add_argument('--num_topics', type=int, default=379, help='Specify the number of unique topics in training')
 parser.add_argument('--vocab_size', type=int, default=62416, help='Number of words in vocabulary')
-parser.add_argument('--embd_dim', type=int, default=400, help='Dimensionality for word embeddings')
+parser.add_argument('--embd_dim', type=int, default=200, help='Dimensionality for word embeddings')
 parser.add_argument('--img_width', type=int, default=180, help='Width of resized similarity grid')
 parser.add_argument('--img_height', type=int, default=180, help='Height of resized similarity grid')
 parser.add_argument('--train_resps_path', type=str, help='Load path to training responses as text')
@@ -147,7 +147,7 @@ def main(args):
     my_model = my_model.to(device)
 
     criterion = torch.nn.BCELoss()
-    optimizer = torch.optim.SGD(my_model.parameters(), lr = args.learning_rate)
+    optimizer = torch.optim.Adam(my_model.parameters(), lr = args.learning_rate)
 
     for epoch in range(args.n_epochs):
         my_model.train()
