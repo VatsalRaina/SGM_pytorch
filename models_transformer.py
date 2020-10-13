@@ -14,7 +14,7 @@ class SketchyReader(torch.nn.Module):
         self.encoder = torch.nn.Embedding(self.hyps['VOCAB_SIZE'], self.hyps['EMBD_DIM'])
         self.pos_encoder = PositionalEncoding(self.hyps['EMBD_DIM'], self.hyps['dropout'])
 
-        encoder_layer = torch.nn.TransformerEncoderLayer(d_model=self.hyps['EMBD_DIM], nhead=self.hyps['nhead'], 
+        encoder_layer = torch.nn.TransformerEncoderLayer(d_model=self.hyps['EMBD_DIM'], nhead=self.hyps['nhead'], 
                                                    dim_feedforward=self.hyps['dim_feedforward'], 
                                                    dropout=self.hyps['dropout'],  activation='gelu')
         self.transformer_encoder = torch.nn.TransformerEncoder(encoder_layer, num_layers=self.hyps['num_encoder_layers'])     
@@ -29,10 +29,11 @@ class SketchyReader(torch.nn.Module):
         self.decoder.bias.data.zero_()
         self.decoder.weight.data.uniform_(-initrange, initrange)
 
-    def _generate_mask(lens):
+    def _generate_mask(self, lens):
         max_len = torch.max(lens)
         mask = torch.arange(max_len).expand(len(lens), max_len) < lens.unsqueeze(1)
         mask = mask.byte()
+        return mask
 
     def forward(self, pr_resp, pr_resp_len, batch_size):
 
@@ -43,9 +44,9 @@ class SketchyReader(torch.nn.Module):
 
         # Cut-off excess words
         max_pr_resp_len = torch.max(pr_resp_len)
-        pr_resp = pr_resp[:, 0:max_p_len]
+        pr_resp = pr_resp[:, 0:max_pr_resp_len]
 
-        pr_mask = _generate_mask(pr_resp_len)   # Shape = [N,S]
+        pr_mask = self._generate_mask(pr_resp_len)   # Shape = [N,S]
         pr_resp_emb = self.encoder(pr_resp)     # Shape = [N,S,E]
         pr_resp_emb = torch.transpose(pr_resp_emb, 0, 1)    # Shape = [S,N,E]
         src = self.pos_encoder(pr_resp_emb)     # Shape = [S,N,E]
