@@ -31,8 +31,10 @@ class SketchyReader(torch.nn.Module):
         self.decoder.weight.data.uniform_(-initrange, initrange)
 
     def _generate_mask(self, lens):
-        max_len = torch.max(lens).item()
-        mask = torch.arange(max_len, device=lens.device, dtype=lens.dtype).expand(len(lens), max_len) < lens.unsqueeze(1)
+        # max_len = torch.max(lens).item()
+        max_len = torch.max(lens)
+        mask = torch.arange(300, device=lens.device, dtype=lens.dtype).expand(len(lens), max_len) < lens.unsqueeze(1)
+        mask = mask[:, 0:max_len]
         return mask
 
     def forward(self, pr_resp, pr_resp_len, batch_size):
