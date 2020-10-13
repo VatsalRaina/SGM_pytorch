@@ -33,7 +33,6 @@ class SketchyReader(torch.nn.Module):
     def _generate_mask(self, lens):
         max_len = torch.max(lens).item()
         mask = torch.arange(max_len, device=lens.device, dtype=lens.dtype).expand(len(lens), max_len) < lens.unsqueeze(1)
-        # mask = mask.bool()
         return mask
 
     def forward(self, pr_resp, pr_resp_len, batch_size):
@@ -51,8 +50,8 @@ class SketchyReader(torch.nn.Module):
         pr_resp_emb = self.encoder(pr_resp)     # Shape = [N,S,E]
         pr_resp_emb = torch.transpose(pr_resp_emb, 0, 1)    # Shape = [S,N,E]
         src = self.pos_encoder(pr_resp_emb)     # Shape = [S,N,E]
-        # H = self.transformer_encoder(src, src_key_padding_mask = pr_mask)   # Shape = [S,N,E]
-        H = self.transformer_encoder(src)   # Shape = [S,N,E]
+        H = self.transformer_encoder(src, src_key_padding_mask = pr_mask)   # Shape = [S,N,E]
+        # H = self.transformer_encoder(src)   # Shape = [S,N,E]
         # Extract first hidden vector
         h1 = torch.squeeze(H[0,:,:])   # Shape = [N,E]
         y = torch.sigmoid(torch.squeeze(self.decoder(h1)))
