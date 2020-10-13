@@ -32,9 +32,8 @@ class SketchyReader(torch.nn.Module):
 
     def _generate_mask(self, lens):
         max_len = torch.max(lens).item()
-        ids = torch.arange(0, max_len, out=torch.cuda.LongTensor(max_len)) 
-        mask = (ids < lens.unsqueeze(1))
-        mask = mask.bool()
+        mask = torch.arange(max_len, device=lens.device, dtype=lens.dtype).expand(len(lens), max_len) < lens.unsqueeze(1)
+        # mask = mask.bool()
         return mask
 
     def forward(self, pr_resp, pr_resp_len, batch_size):
