@@ -55,7 +55,7 @@ class SketchyReader(torch.nn.Module):
         H = self.transformer_encoder(src, src_key_padding_mask = pr_mask)   # Shape = [S,N,E]
         # Extract first hidden vector
         h1 = torch.squeeze(H[0,:,:])   # Shape = [N,E]
-        y = self.decoder(h1)
+        y = torch.sigmoid(self.decoder(h1))
         return y
         
 
