@@ -31,8 +31,9 @@ class SketchyReader(torch.nn.Module):
         self.decoder.weight.data.uniform_(-initrange, initrange)
 
     def _generate_mask(self, lens):
-        max_len = torch.max(lens)
-        mask = torch.arange(0, max_len, out=torch.cuda.LongTensor(max_len)) < lens.unsqueeze(1)
+        max_len = torch.max(lens).item()
+        ids = torch.arange(0, max_len, out=torch.cuda.LongTensor(max_len)) 
+        mask = (ids < lens.unsqueeze(1))
         mask = mask.byte()
         return mask
 
