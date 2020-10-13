@@ -52,7 +52,8 @@ class SketchyReader(torch.nn.Module):
         pr_resp_emb = self.encoder(pr_resp)     # Shape = [N,S,E]
         pr_resp_emb = torch.transpose(pr_resp_emb, 0, 1)    # Shape = [S,N,E]
         src = self.pos_encoder(pr_resp_emb)     # Shape = [S,N,E]
-        H = self.transformer_encoder(src, src_key_padding_mask = pr_mask)   # Shape = [S,N,E]
+        # H = self.transformer_encoder(src, src_key_padding_mask = pr_mask)   # Shape = [S,N,E]
+        H = self.transformer_encoder(src)   # Shape = [S,N,E]
         # Extract first hidden vector
         h1 = torch.squeeze(H[0,:,:])   # Shape = [N,E]
         y = torch.sigmoid(torch.squeeze(self.decoder(h1)))
