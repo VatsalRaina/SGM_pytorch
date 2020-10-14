@@ -96,7 +96,8 @@ def main(args):
     y_true = 1.-y_true
     y_pred = 1.-y_pred_all
     precision, recall, _ = precision_recall_curve(y_true, y_pred)
-    np.seterr(divide='ignore', invalid='ignore')
+    print(precision)
+    print(recall)
     f_score = np.amax( (1.+0.5**2) * ( (precision * recall) / (0.5**2 * precision + recall) ) )
     print("F0.5 score is:")
     print(f_score)
