@@ -36,6 +36,7 @@ class SketchyReader(torch.nn.Module):
         mask = torch.arange(300, device=lens.device, dtype=lens.dtype).expand(len(lens), 300) < lens.unsqueeze(1)
         mask = mask[:, 0:max_len]
         mask=mask.bool()
+        # Invert the mask
         mask=~mask
         return mask
 
