@@ -35,6 +35,8 @@ class SketchyReader(torch.nn.Module):
         max_len = torch.max(lens)
         mask = torch.arange(300, device=lens.device, dtype=lens.dtype).expand(len(lens), 300) < lens.unsqueeze(1)
         mask = mask[:, 0:max_len]
+        mask=mask.bool()
+        mask=~mask
         return mask
 
     def forward(self, pr_resp, pr_resp_len, batch_size):
