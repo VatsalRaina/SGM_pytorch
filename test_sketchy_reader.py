@@ -57,10 +57,6 @@ def main(args):
     model = torch.load(args.model_path)
     model.eval().to(device)
 
-    # Load up the trained model
-    model = torch.load(args.model_path)
-    model.eval().to(device)
-
     prompts, prompts_lens, _ = text_to_array(args.prompts_path, args.wlist_path)
     responses, responses_lens, _ = text_to_array(args.resps_path, args.wlist_path)
     y_true = np.loadtxt(args.labels_path, dtype=np.float)
@@ -100,6 +96,7 @@ def main(args):
     y_true = 1.-y_true
     y_pred = 1.-y_pred_all
     precision, recall, _ = precision_recall_curve(y_true, y_pred)
+    np.seterr(divide='ignore', invalid='ignore')
     f_score = np.amax( (1.+0.5**2) * ( (precision * recall) / (0.5**2 * precision + recall) ) )
     print("F0.5 score is:")
     print(f_score)
