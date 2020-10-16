@@ -225,7 +225,7 @@ def main(args):
     for epoch in range(args.n_epochs):
         # Perform one full pass over the training set.
         print("")
-        print('======== Epoch {:} / {:} ========'.format(epoch + 1, args.epochs))
+        print('======== Epoch {:} / {:} ========'.format(epoch + 1, args.n_epochs))
         print('Training...')
         # Measure how long the training epoch takes.
         t0 = time.time()
