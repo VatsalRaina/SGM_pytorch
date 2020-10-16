@@ -65,7 +65,7 @@ def _shuffle(p_id, r, r_msk, topics_dist, NUM_TOPICS, device):
     y_true_second = np.zeros(bs, dtype=int)
     y_true = np.concatenate([y_true_first, y_true_second])
     y_true = torch.from_numpy(y_true)
-    y_true = y_true.float().to(device)
+    y_true = y_true.long().to(device)
     new_p_id = np.random.choice(NUM_TOPICS, bs, p=topics_dist)
     for i in range(bs):
         while (new_p_id[i] == p_id[i]):
