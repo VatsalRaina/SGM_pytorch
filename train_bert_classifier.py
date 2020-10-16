@@ -248,7 +248,7 @@ def main(args):
             # have provided the `labels`.
             # The documentation for this `model` function is here: 
             # https://huggingface.co/transformers/v2.2.0/model_doc/bert.html#transformers.BertForSequenceClassification
-            outputs = model(pr_resp), token_type_ids=None, attention_mask=pr_resp_msk, labels=y_true)
+            outputs = model(pr_resp, token_type_ids=None, attention_mask=pr_resp_msk, labels=y_true)
             
             # The call to `model` always returns a tuple, so we need to pull the 
             # loss value out of the tuple.
