@@ -134,7 +134,6 @@ def main(args):
         resp_ids.append(encoded_sent)
     
     MAX_LEN_topic = max([len(sen) for sen in topic_ids])
-    print('Padding/truncating all topic sentences to %d values...' + MAX_LEN)
     MAX_LEN_resp = max([len(sen) for sen in resp_ids])
     print('\nPadding token: "{:}", ID: {:}'.format(tokenizer.pad_token, tokenizer.pad_token_id))
 
@@ -215,7 +214,7 @@ def main(args):
     for epoch in range(args.n_epochs):
         # Perform one full pass over the training set.
         print("")
-        print('======== Epoch {:} / {:} ========'.format(epoch_i + 1, epochs))
+        print('======== Epoch {:} / {:} ========'.format(epoch + 1, args.epochs))
         print('Training...')
         # Measure how long the training epoch takes.
         t0 = time.time()
@@ -234,7 +233,7 @@ def main(args):
             r = batch[0].to(device)
             r_msk = batch[0].to(device)
             # Perform dynamic shuffling
-            p_id, r, r_msk, y_true, batch_size = _shuffle(p_id, r, r_msk, topics_dist, NUM_TOPICS, device)           
+            p_id, r, r_msk, y_true, batch_size = _shuffle(p_id, r, r_msk, topics_dist, args.num_topics, device)           
             # Get the prompts from the topics
             p, p_msk = _get_prompts(p_id, topic_ids, attention_masks_topic)
             p, p_msk = p.to(device), p_msk.to(device)
