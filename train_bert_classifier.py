@@ -108,6 +108,9 @@ def main(args):
     prompts_train_idxs = np.loadtxt(args.train_prompts_idxs_path, dtype=np.int64)
     topics_dist = np.loadtxt(args.unique_prompts_distribution_path, dtype=np.int32)
 
+    # Normalise
+    topics_dist = topics_dist / np.linalg.norm(topics_dist, 1)
+
     # Load the BERT tokenizer.
     print('Loading BERT tokenizer...')
     tokenizer = BertTokenizer.from_pretrained('bert-base-uncased', do_lower_case=True)
