@@ -286,6 +286,10 @@ def main(args):
         # NEED TO DO THE VALIDATION CODE NOW - see the rest of the tutorial at
         # https://medium.com/@aniruddha.choudhury94/part-2-bert-fine-tuning-tutorial-with-pytorch-for-text-classification-on-the-corpus-of-linguistic-18057ce330e1
 
+    # Save the model to a file
+    file_path = args.save_path+'bert_classifier_seed'+str(args.seed)+'.pt'
+    torch.save(my_model, file_path)
+
 if __name__ == '__main__':
     args = parser.parse_args()
     main(args)
