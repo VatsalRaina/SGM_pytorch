@@ -244,8 +244,8 @@ def main(args):
                 # Report progress.
                 print('  Batch {:>5,}  of  {:>5,}.    Elapsed: {:}.'.format(step, len(train_dataloader), elapsed))
             p_id = batch[0].to(device)
-            r = batch[0].to(device)
-            r_msk = batch[0].to(device)
+            r = batch[1].to(device)
+            r_msk = batch[2].to(device)
             # Perform dynamic shuffling
             p_id, r, r_msk, y_true, batch_size = _shuffle(p_id, r, r_msk, topics_dist, args.num_topics, device)           
             # Get the prompts from the topics
