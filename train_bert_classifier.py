@@ -157,7 +157,7 @@ def main(args):
         # Store the attention mask for this sentence.
         attention_masks_topic.append(att_mask)
     attention_masks_resp = []
-    for sent in topic_ids:
+    for sent in resp_ids:
         # Create the attention mask.
         #   - If a token ID is 0, then it's padding, set the mask to 0.
         #   - If a token ID is > 0, then it's a real token, set the mask to 1.
