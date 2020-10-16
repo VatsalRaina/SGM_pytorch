@@ -74,7 +74,7 @@ def _shuffle(p_id, r, r_msk, topics_dist, NUM_TOPICS, device):
     new_p_id = new_p_id.long().to(device)
     p_id = torch.cat((p_id, new_p_id), 0)
     r = torch.cat((r, r), 0)
-    r_len = torch.cat((r_msk, r_msk), 0)
+    r_msk = torch.cat((r_msk, r_msk), 0)
     return p_id, r, r_msk, y_true, bs
 
 def _get_prompts(p_id, topics, topics_msks):
@@ -174,9 +174,17 @@ def main(args):
     topic_ids = topic_ids.long()
     topic_ids = topic_ids.to(device)
 
+    attention_masks_topic = torch.tensor(attention_masks_topic)
+    attention_masks_topic = attention_masks_topic.long()
+    attention_masks_topic = attention_masks_topic.to(device)
+
     resp_ids = torch.tensor(resp_ids)
     resp_ids = resp_ids.long()
     resp_ids = resp_ids.to(device)
+
+    attention_masks_resp = torch.tensor(attention_masks_resp)
+    attention_masks_resp = attention_masks_resp.long()
+    attention_masks_resp = attention_masks_resp.to(device)
 
     # Create the DataLoader for our training set.
     train_data = TensorDataset(prompts_train_idxs, resp_ids, attention_masks_resp)
