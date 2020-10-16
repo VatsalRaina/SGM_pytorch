@@ -187,6 +187,9 @@ def main(args):
     attention_masks_resp = attention_masks_resp.to(device)
 
     # Create the DataLoader for our training set.
+    print(prompts_train_idxs.size(0))
+    print(resp_ids.size(0))
+    print(attention_masks_resp.size(0))
     train_data = TensorDataset(prompts_train_idxs, resp_ids, attention_masks_resp)
     train_sampler = RandomSampler(train_data)
     train_dataloader = DataLoader(train_data, sampler=train_sampler, batch_size=args.batch_size)
