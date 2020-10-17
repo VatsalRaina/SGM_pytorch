@@ -168,7 +168,7 @@ def main(args):
         # Store the attention mask for this sentence.
         attention_masks_resp.append(att_mask)
 
-    # Convert to torch tensorrs
+    # Convert to torch tensors
 
     prompts_train_idxs = torch.from_numpy(prompts_train_idxs)
     prompts_train_idxs = prompts_train_idxs.long()
@@ -291,7 +291,7 @@ def main(args):
 
         print("")
         print("  Average training loss: {0:.2f}".format(avg_train_loss))
-        print("  Training epcoh took: {:}".format(format_time(time.time() - t0)))
+        print("  Training epoch took: {:}".format(format_time(time.time() - t0)))
 
         # NEED TO DO THE VALIDATION CODE NOW - see the rest of the tutorial at
         # https://medium.com/@aniruddha.choudhury94/part-2-bert-fine-tuning-tutorial-with-pytorch-for-text-classification-on-the-corpus-of-linguistic-18057ce330e1
