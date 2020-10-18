@@ -97,7 +97,7 @@ def main(args):
         f.write('--------------------------------\n')
 
     # Set the seed value all over the place to make this reproducible.
-    seed_val = args.seed
+    seed_val = args.see
     random.seed(seed_val)
     np.random.seed(seed_val)
     torch.manual_seed(seed_val)
