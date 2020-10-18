@@ -12,7 +12,7 @@ import time
 import datetime
 
 from transformers import BertTokenizer
-#from keras.preprocessing.sequence import pad_sequences
+from keras.preprocessing.sequence import pad_sequences
 from transformers import BertForSequenceClassification, AdamW, BertConfig
 from transformers import get_linear_schedule_with_warmup
 
