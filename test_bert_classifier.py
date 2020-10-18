@@ -134,7 +134,9 @@ def main(args):
     dl = DataLoader(ds, batch_size = args.batch_size, shuffle = False)
 
     y_pred_all = []
+    count = 0
     for p, p_msk, r, r_msk, y_t in dl:
+        count+=1
         p, p_msk, r, r_msk, y_t = p.to(device), p_msk.to(device), r.to(device), r_msk.to(device), y_t.to(device)
         # Concatenate prompts and responses
         pr_resp, pr_resp_msk = _join_pr_resp(p, p_msk, r, r_msk)
@@ -144,8 +146,12 @@ def main(args):
         with torch.no_grad():
             outputs = model(pr_resp, token_type_ids=None, attention_mask=pr_resp_msk, labels=y_t)
         logits = outputs[1]
-        logits = logits.detach().cpu().numpy().tolist()
+        logits = logits.detach().cpu().numpy()
+        logits = np.squeeze(logits[:, 0])
+        logits = logits.tolist()
         y_pred_all += logits
+        if count==2:
+            break
     y_pred_all = np.array(y_pred_all)
 
     # Save the predicted values so that they can be used for ensembling
