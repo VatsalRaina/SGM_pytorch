@@ -12,6 +12,7 @@ import time
 import datetime
 
 from transformers import BertTokenizer
+from transformers import BertForSequenceClassification
 from keras.preprocessing.sequence import pad_sequences
 from sklearn.metrics import precision_recall_curve
 
