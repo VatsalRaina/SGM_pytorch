@@ -126,19 +126,23 @@ def main(args):
     attention_masks_resp = attention_masks_resp.long()
     attention_masks_resp = attention_masks_resp.to(device)
 
-    ds = TensorDataset(prompt_ids, attention_masks_prompt, resp_ids, attention_masks_resp)
+    y_true = torch.tensor(y_true)
+    y_true = y_true.long()
+    y_true = y_true.to(device)
+
+    ds = TensorDataset(prompt_ids, attention_masks_prompt, resp_ids, attention_masks_resp, y_true)
     dl = DataLoader(ds, batch_size = args.batch_size, shuffle = False)
 
     y_pred_all = []
-    for p, p_msk, r, r_msk in dl:
-        p, p_msk, r, r_msk = p.to(device), p_msk.to(device), r.to(device), r_msk.to(device)
+    for p, p_msk, r, r_msk, y_t in dl:
+        p, p_msk, r, r_msk, y_t = p.to(device), p_msk.to(device), r.to(device), r_msk.to(device), y_t.to(device)
         # Concatenate prompts and responses
         pr_resp, pr_resp_msk = _join_pr_resp(p, p_msk, r, r_msk)
         pr_resp, pr_resp_msk = pr_resp.to(device), pr_resp_msk.to(device)        
         # Telling the model not to compute or store gradients, saving memory and 
         # speeding up prediction
         with torch.no_grad():
-            outputs = model(pr_resp, token_type_ids=None, attention_mask=pr_resp_msk, labels=y_true)
+            outputs = model(pr_resp, token_type_ids=None, attention_mask=pr_resp_msk, labels=y_t)
         logits = outputs[0]
         logits = logits.detach().cpu().numpy().tolist()
         y_pred_all += logits
