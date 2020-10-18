@@ -143,7 +143,7 @@ def main(args):
         # speeding up prediction
         with torch.no_grad():
             outputs = model(pr_resp, token_type_ids=None, attention_mask=pr_resp_msk, labels=y_t)
-        logits = outputs[0]
+        logits = outputs[1]
         logits = logits.detach().cpu().numpy().tolist()
         y_pred_all += logits
     y_pred_all = np.array(y_pred_all)
