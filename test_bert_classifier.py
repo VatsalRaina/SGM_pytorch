@@ -126,11 +126,11 @@ def main(args):
     attention_masks_resp = attention_masks_resp.long()
     attention_masks_resp = attention_masks_resp.to(device)
 
-    y_true = torch.tensor(y_true)
-    y_true = y_true.long()
-    y_true = y_true.to(device)
+    y_true_torch = torch.tensor(y_true)
+    y_true_torch = y_true_torch.long()
+    y_true_torch = y_true_torch.to(device)
 
-    ds = TensorDataset(prompt_ids, attention_masks_prompt, resp_ids, attention_masks_resp, y_true)
+    ds = TensorDataset(prompt_ids, attention_masks_prompt, resp_ids, attention_masks_resp, y_true_torch)
     dl = DataLoader(ds, batch_size = args.batch_size, shuffle = False)
 
     y_pred_all = []
@@ -147,6 +147,9 @@ def main(args):
         logits = logits.detach().cpu().numpy().tolist()
         y_pred_all += logits
     y_pred_all = np.array(y_pred_all)
+
+    # Save the predicted values so that they can be used for ensembling
+    np.savetxt(args.predictions_save_path, y_pred_all)
 
     # Calculate and report best F0.5 score
     # Label 1 indicates on-topic and 0 indicates off-topic
