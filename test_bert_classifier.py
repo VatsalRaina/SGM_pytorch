@@ -147,11 +147,11 @@ def main(args):
             outputs = model(pr_resp, token_type_ids=None, attention_mask=pr_resp_msk, labels=y_t)
         logits = outputs[1]
         logits = logits.detach().cpu().numpy()
-        logits = np.squeeze(logits[:, 0])
+        logits = np.squeeze(logits[:, 1])
         logits = logits.tolist()
         y_pred_all += logits
-        if count==2:
-            break
+        # if count==2:
+        #     break
     y_pred_all = np.array(y_pred_all)
 
     # Save the predicted values so that they can be used for ensembling
