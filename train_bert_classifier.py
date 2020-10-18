@@ -12,7 +12,7 @@ import time
 import datetime
 
 from transformers import BertTokenizer
-from keras.preprocessing.sequence import pad_sequences
+#from keras.preprocessing.sequence import pad_sequences
 from transformers import BertForSequenceClassification, AdamW, BertConfig
 from transformers import get_linear_schedule_with_warmup
 
@@ -97,7 +97,7 @@ def main(args):
         f.write('--------------------------------\n')
 
     # Set the seed value all over the place to make this reproducible.
-    seed_val = args.see
+    seed_val = args.seed
     random.seed(seed_val)
     np.random.seed(seed_val)
     torch.manual_seed(seed_val)
