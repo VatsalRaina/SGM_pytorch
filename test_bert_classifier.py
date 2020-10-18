@@ -7,6 +7,7 @@ import sys
 import torch
 from torch.utils.data import TensorDataset, DataLoader
 import numpy as np
+from sklearn.metrics import precision_recall_curve
 import random
 import time
 import datetime
@@ -14,7 +15,7 @@ import datetime
 from transformers import BertTokenizer
 from transformers import BertForSequenceClassification
 from keras.preprocessing.sequence import pad_sequences
-from sklearn.metrics import precision_recall_curve
+
 
 parser = argparse.ArgumentParser(description='Get all command line arguments.')
 parser.add_argument('--batch_size', type=int, default=100, help='Specify the test batch size')
