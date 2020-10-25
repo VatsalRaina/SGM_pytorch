@@ -306,3 +306,6 @@ def main(args):
     torch.save(model, file_path)
 
 
+if __name__ == '__main__':
+    args = parser.parse_args()
+    main(args)
