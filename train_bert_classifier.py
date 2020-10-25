@@ -33,7 +33,7 @@ parser.add_argument('--unique_prompts_distribution_path', type=str, help='Load p
 parser.add_argument('--train_prompts_idxs_path', type=str, help='Load path to training data unique prompt indices (for dynamic shuffling)')
 parser.add_argument('--valid_prompts_idxs_path', type=str, help='Load path to valid data unique prompt indices (for dynamic shuffling)')
 parser.add_argument('--save_path', type=str, help='Load path to which trained model will be saved')
-parser.add_argument('--reverse', action='store_true', help='If true, then concatenate the response onto prompt instead of other way around')
+parser.add_argument('--reverse', type=bool, default=False, help='If true, then concatenate the response onto prompt instead of other way around')
 
 # Function to calculate the accuracy of our predictions vs labels
 def flat_accuracy(preds, labels):
