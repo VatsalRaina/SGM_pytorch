@@ -33,6 +33,7 @@ parser.add_argument('--unique_prompts_distribution_path', type=str, help='Load p
 parser.add_argument('--train_prompts_idxs_path', type=str, help='Load path to training data unique prompt indices (for dynamic shuffling)')
 parser.add_argument('--valid_prompts_idxs_path', type=str, help='Load path to valid data unique prompt indices (for dynamic shuffling)')
 parser.add_argument('--save_path', type=str, help='Load path to which trained model will be saved')
+parser.add_argument('--reverse', action='store_true', help='If true, then concatenate the response onto prompt instead of other way around')
 
 # Function to calculate the accuracy of our predictions vs labels
 def flat_accuracy(preds, labels):
@@ -82,11 +83,15 @@ def _get_prompts(p_id, topics, topics_msks):
     p_msk = torch.index_select(topics_msks, 0, p_id)
     return p, p_msk
 
-def _join_pr_resp(p, p_msk, r, r_msk):
+def _join_pr_resp(p, p_msk, r, r_msk, reverse):
     # Literally concatenate prompt and response without bothering 
     # to put all the padding on the end
-    pr_resp = torch.cat((p, r), 1)
-    pr_resp_msk = torch.cat((p_msk, r_msk), 1)
+    if reverse:
+        pr_resp = torch.cat((p, r), 1)
+        pr_resp_msk = torch.cat((p_msk, r_msk), 1)
+    else:
+        pr_resp = torch.cat((r, p), 1)
+        pr_resp_msk = torch.cat((r_msk, p_msk), 1)        
     return pr_resp, pr_resp_msk
 
 def main(args):
@@ -252,7 +257,7 @@ def main(args):
             p, p_msk = _get_prompts(p_id, topic_ids, attention_masks_topic)
             p, p_msk = p.to(device), p_msk.to(device)
             # Concatenate prompts and responses
-            pr_resp, pr_resp_msk = _join_pr_resp(p, p_msk, r, r_msk)
+            pr_resp, pr_resp_msk = _join_pr_resp(p, p_msk, r, r_msk, args.reverse)
             pr_resp, pr_resp_msk = pr_resp.to(device), pr_resp_msk.to(device)
             model.zero_grad()
 
@@ -300,6 +305,4 @@ def main(args):
     file_path = args.save_path+'bert_classifier_seed'+str(args.seed)+'.pt'
     torch.save(model, file_path)
 
-if __name__ == '__main__':
-    args = parser.parse_args()
-    main(args)
+

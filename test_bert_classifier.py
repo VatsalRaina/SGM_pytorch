@@ -24,6 +24,8 @@ parser.add_argument('--resps_path', type=str, help='Load path to test responses 
 parser.add_argument('--labels_path', type=str, help='Load path to labels')
 parser.add_argument('--model_path', type=str, help='Load path to trained model')
 parser.add_argument('--predictions_save_path', type=str, help="Where to save predicted values")
+parser.add_argument('--reverse', action='store_true', help='If true, then concatenate the response onto prompt instead of other way around')
+
 
 # Set device
 def get_default_device():
@@ -33,11 +35,15 @@ def get_default_device():
     else:
         return torch.device('cpu')
 
-def _join_pr_resp(p, p_msk, r, r_msk):
+def _join_pr_resp(p, p_msk, r, r_msk, reverse):
     # Literally concatenate prompt and response without bothering 
     # to put all the padding on the end
-    pr_resp = torch.cat((p, r), 1)
-    pr_resp_msk = torch.cat((p_msk, r_msk), 1)
+    if reverse:
+        pr_resp = torch.cat((p, r), 1)
+        pr_resp_msk = torch.cat((p_msk, r_msk), 1)
+    else:
+        pr_resp = torch.cat((r, p), 1)
+        pr_resp_msk = torch.cat((r_msk, p_msk), 1)        
     return pr_resp, pr_resp_msk
 
 def main(args):
@@ -139,7 +145,7 @@ def main(args):
         count+=1
         p, p_msk, r, r_msk, y_t = p.to(device), p_msk.to(device), r.to(device), r_msk.to(device), y_t.to(device)
         # Concatenate prompts and responses
-        pr_resp, pr_resp_msk = _join_pr_resp(p, p_msk, r, r_msk)
+        pr_resp, pr_resp_msk = _join_pr_resp(p, p_msk, r, r_msk, args.reverse)
         pr_resp, pr_resp_msk = pr_resp.to(device), pr_resp_msk.to(device)        
         # Telling the model not to compute or store gradients, saving memory and 
         # speeding up prediction
