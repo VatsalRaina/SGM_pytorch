@@ -24,7 +24,7 @@ parser.add_argument('--resps_path', type=str, help='Load path to test responses 
 parser.add_argument('--labels_path', type=str, help='Load path to labels')
 parser.add_argument('--model_path', type=str, help='Load path to trained model')
 parser.add_argument('--predictions_save_path', type=str, help="Where to save predicted values")
-parser.add_argument('--reverse', action='store_true', help='If true, then concatenate the response onto prompt instead of other way around')
+parser.add_argument('--reverse', type=bool, default=False, help='If true, then concatenate the response onto prompt instead of other way around')
 
 
 # Set device
