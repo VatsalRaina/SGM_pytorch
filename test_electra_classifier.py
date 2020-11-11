@@ -141,7 +141,9 @@ def main(args):
 
     y_pred_all = []
     count = 0
+    print(len(dl))
     for p, p_msk, r, r_msk, y_t in dl:
+        print(count)
         count+=1
         p, p_msk, r, r_msk, y_t = p.to(device), p_msk.to(device), r.to(device), r_msk.to(device), y_t.to(device)
         # Concatenate prompts and responses
