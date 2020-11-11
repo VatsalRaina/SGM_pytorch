@@ -56,7 +56,7 @@ def main(args):
     device = get_default_device()
 
     # Load up the trained model
-    model = torch.load(args.model_path)
+    model = torch.load(args.model_path, map_location=device)
     model.eval().to(device)
 
     y_true = np.loadtxt(args.labels_path, dtype=np.float)
