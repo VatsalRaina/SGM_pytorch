@@ -87,9 +87,11 @@ def _join_pr_resp(p, p_msk, r, r_msk, reverse):
     # Literally concatenate prompt and response without bothering 
     # to put all the padding on the end
     if reverse:
+        print("Reversing!")
         pr_resp = torch.cat((r, p), 1)
         pr_resp_msk = torch.cat((r_msk, p_msk), 1)
     else:
+        print("NOT reversing")
         pr_resp = torch.cat((p, r), 1)
         pr_resp_msk = torch.cat((p_msk, r_msk), 1)        
     return pr_resp, pr_resp_msk
