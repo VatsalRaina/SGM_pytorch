@@ -120,7 +120,7 @@ def main(args):
 
     # Load the BERT tokenizer.
     print('Loading BERT tokenizer...')
-    tokenizer = ElectraTokenizer.from_pretrained('google/electra-small-discriminator', do_lower_case=True)
+    tokenizer = ElectraTokenizer.from_pretrained('google/electra-base-discriminator', do_lower_case=True)
 
     with open(args.unique_prompts_path) as f:
         topics = f.readlines()
@@ -207,7 +207,7 @@ def main(args):
     # Load BertForSequenceClassification, the pretrained BERT model with a single 
     # linear classification layer on top. 
     model = ElectraForSequenceClassification.from_pretrained(
-        "google/electra-small-discriminator", # Use the 12-layer BERT model, with an uncased vocab.
+        "google/electra-base-discriminator", # Use the 12-layer BERT model, with an uncased vocab.
         num_labels = 2, # The number of output labels--2 for binary classification.
                         # You can increase this for multi-class tasks.   
         output_attentions = False, # Whether the model returns attentions weights.

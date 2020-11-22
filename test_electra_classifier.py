@@ -61,7 +61,7 @@ def main(args):
 
     y_true = np.loadtxt(args.labels_path, dtype=np.float)
 
-    tokenizer = ElectraTokenizer.from_pretrained('google/electra-small-discriminator', do_lower_case=True)
+    tokenizer = ElectraTokenizer.from_pretrained('google/electra-base-discriminator', do_lower_case=True)
 
     with open(args.prompts_path) as f:
         prompts = f.readlines()
