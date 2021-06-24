@@ -134,14 +134,14 @@ def main(args):
     topic_ids = []
     for sent in topics:
         encoded_sent = tokenizer.encode(sent, add_special_tokens=True)
-        if len(encoded_sent>256):
+        if len(encoded_sent)>256:
             encoded_sent = encoded_sent[:255]+encoded_sent[-1]
         topic_ids.append(encoded_sent)
 
     resp_ids = []
     for sent in responses:
         encoded_sent = tokenizer.encode(sent, add_special_tokens=True)
-        if len(encoded_sent>256):
+        if len(encoded_sent)>256:
             encoded_sent = encoded_sent[:255]+encoded_sent[-1]
         resp_ids.append(encoded_sent)
     
