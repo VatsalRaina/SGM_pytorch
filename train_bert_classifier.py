@@ -141,8 +141,8 @@ def main(args):
     resp_ids = []
     for sent in responses:
         encoded_sent = tokenizer.encode(sent, add_special_tokens=True)
-        if len(encoded_sent)>220:
-            encoded_sent = encoded_sent[:219]+[encoded_sent[-1]]
+        if len(encoded_sent)>240:
+            encoded_sent = encoded_sent[:239]+[encoded_sent[-1]]
         resp_ids.append(encoded_sent)
     
     MAX_LEN_topic = max([len(sen) for sen in topic_ids])
