@@ -81,7 +81,7 @@ def main(args):
     # We need the lengths as the numpy array is of fixed size but each sentence is of different length
     # so we need to know how many redundant zeros we have in each sample.
     responses_train, responses_train_lens, deleted_resp_train_elems = text_to_array(args.train_resps_path, args.wlist_path)
-    responses_valid, responses_valid_lens, deleted_resp_valid_elems = text_to_array(args.valid_resps_path, args.wlist_path)
+    # responses_valid, responses_valid_lens, deleted_resp_valid_elems = text_to_array(args.valid_resps_path, args.wlist_path)
     topics, topics_lens, _ = text_to_array(args.unique_prompts_path, args.wlist_path)
 
     # For dynamic shuffling to generate the negative samples each epoch, we need to make sure the source
@@ -95,17 +95,17 @@ def main(args):
 
     # Remove prompts corresponding to deleted responses
     prompts_train_idxs = np.delete(prompts_train_idxs, deleted_resp_train_elems)
-    prompts_valid_idxs = np.delete(prompts_valid_idxs, deleted_resp_valid_elems)
+    # prompts_valid_idxs = np.delete(prompts_valid_idxs, deleted_resp_valid_elems)
 
     responses_train = torch.from_numpy(responses_train)
     responses_train = responses_train.long()
     responses_train_lens = torch.from_numpy(responses_train_lens)
     responses_train_lens = responses_train_lens.long()
 
-    responses_valid = torch.from_numpy(responses_valid)
-    responses_valid = responses_valid.long()
-    responses_valid_lens = torch.from_numpy(responses_valid_lens)
-    responses_valid_lens = responses_valid_lens.long()
+    # responses_valid = torch.from_numpy(responses_valid)
+    # responses_valid = responses_valid.long()
+    # responses_valid_lens = torch.from_numpy(responses_valid_lens)
+    # responses_valid_lens = responses_valid_lens.long()
 
     topics = torch.from_numpy(topics)
     topics = topics.long()
@@ -116,8 +116,8 @@ def main(args):
 
     prompts_train_idxs = torch.from_numpy(prompts_train_idxs)
     prompts_train_idxs = prompts_train_idxs.long()
-    prompts_valid_idxs = torch.from_numpy(prompts_valid_idxs)
-    prompts_valid_idxs = prompts_valid_idxs.long()
+    # prompts_valid_idxs = torch.from_numpy(prompts_valid_idxs)
+    # prompts_valid_idxs = prompts_valid_idxs.long()
 
     # TEMP!!!
     # prompts_train_idxs = prompts_train_idxs[:1000]
@@ -129,11 +129,11 @@ def main(args):
 
     # Store all training dataset in a single wrapped tensor
     train_ds = TensorDataset(prompts_train_idxs, responses_train, responses_train_lens)
-    valid_ds = TensorDataset(prompts_valid_idxs, responses_valid, responses_valid_lens)
+    # valid_ds = TensorDataset(prompts_valid_idxs, responses_valid, responses_valid_lens)
 
     # Use DataLoader to handle minibatches easily
     train_dl = DataLoader(train_ds, batch_size = args.batch_size, shuffle = True)
-    valid_dl = DataLoader(valid_ds, batch_size = args.batch_size, shuffle = False)
+    # valid_dl = DataLoader(valid_ds, batch_size = args.batch_size, shuffle = False)
 
     # Construct model
     NUM_TOPICS = args.num_topics
@@ -179,23 +179,24 @@ def main(args):
             # print(counter)
         trn_loss = total_loss / counter
 
-        # Calculate dev set loss
-        total_loss = 0
-        counter = 0
-        for p_id, r, r_len in valid_dl:
-            p_id, r, r_len = p_id.to(device), r.to(device), r_len.to(device)
-            p_id, r, r_len, y_true, batch_size = _shuffle(p_id, r, r_len, topics_dist, NUM_TOPICS, device)
-            p, p_len = _get_prompts(p_id, topics, topics_lens)
-            p, p_len = p.to(device), p_len.to(device)
-            y_pred = my_model.forward(p, p_len, r, r_len, batch_size*2, 0.0)
-            y_pred = y_pred.to(device)
-            loss = criterion(y_pred, y_true)
-            total_loss += loss.item()
-            counter += 1
-        valid_loss = total_loss / counter
+        # # Calculate dev set loss
+        # total_loss = 0
+        # counter = 0
+        # for p_id, r, r_len in valid_dl:
+        #     p_id, r, r_len = p_id.to(device), r.to(device), r_len.to(device)
+        #     p_id, r, r_len, y_true, batch_size = _shuffle(p_id, r, r_len, topics_dist, NUM_TOPICS, device)
+        #     p, p_len = _get_prompts(p_id, topics, topics_lens)
+        #     p, p_len = p.to(device), p_len.to(device)
+        #     y_pred = my_model.forward(p, p_len, r, r_len, batch_size*2, 0.0)
+        #     y_pred = y_pred.to(device)
+        #     loss = criterion(y_pred, y_true)
+        #     total_loss += loss.item()
+        #     counter += 1
+        # valid_loss = total_loss / counter
 
         # Report results at end of each epoch
-        print("Epoch: ", epoch, " Training Loss: ", trn_loss, " Validation Loss: ", valid_loss)
+        # print("Epoch: ", epoch, " Training Loss: ", trn_loss, " Validation Loss: ", valid_loss)
+        print("Epoch: ", epoch, " Training Loss: ", trn_loss)
 
     # Save the model to a file
     file_path = args.save_path+'sgm_seed'+str(args.seed)+'.pt'
