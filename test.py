@@ -43,8 +43,8 @@ def main(args):
     model = torch.load(args.model_path)
     model.eval().to(device)
 
-    prompts, prompts_lens, _ = text_to_array(args.prompts_path, args.wlist_path)
-    responses, responses_lens, _ = text_to_array(args.resps_path, args.wlist_path)
+    prompts, prompts_lens, _ = text_to_array(args.prompts_path, args.wlist_path, is_eval=True)
+    responses, responses_lens, _ = text_to_array(args.resps_path, args.wlist_path, is_eval=True)
     y_true = np.loadtxt(args.labels_path, dtype=np.float)
 
     #TEMP!!!
