@@ -34,6 +34,7 @@ parser.add_argument('--unique_prompts_distribution_path', type=str, help='Load p
 parser.add_argument('--train_prompts_idxs_path', type=str, help='Load path to training data unique prompt indices (for dynamic shuffling)')
 parser.add_argument('--valid_prompts_idxs_path', type=str, help='Load path to valid data unique prompt indices (for dynamic shuffling)')
 parser.add_argument('--save_path', type=str, help='Load path to which trained model will be saved')
+parser.add_argument('--model_checkpoint', type=str, default=None, help='Optionally load path to a trained model checkpoint')
 
 # Function to calculate the accuracy of our predictions vs labels
 def flat_accuracy(preds, labels):
@@ -207,14 +208,17 @@ def main(args):
     train_dataloader = DataLoader(train_data, sampler=train_sampler, batch_size=args.batch_size)
 
     # Load BertForSequenceClassification, the pretrained BERT model with a single 
-    # linear classification layer on top. 
-    model = BertForSequenceClassification.from_pretrained(
-        "bert-base-uncased", # Use the 12-layer BERT model, with an uncased vocab.
-        num_labels = 2, # The number of output labels--2 for binary classification.
-                        # You can increase this for multi-class tasks.   
-        output_attentions = False, # Whether the model returns attentions weights.
-        output_hidden_states = False, # Whether the model returns all hidden-states.
-    )
+    # linear classification layer on top.
+    if args.model_checkpoint is None:
+        model = BertForSequenceClassification.from_pretrained(
+            "bert-base-uncased", # Use the 12-layer BERT model, with an uncased vocab.
+            num_labels = 2, # The number of output labels--2 for binary classification.
+                            # You can increase this for multi-class tasks.   
+            output_attentions = False, # Whether the model returns attentions weights.
+            output_hidden_states = False, # Whether the model returns all hidden-states.
+        )
+    else:
+        model = torch.load(args.model_checkpoint, map_location=device)
     model.to(device)
 
     # Note: AdamW is a class from the huggingface library (as opposed to pytorch) 
