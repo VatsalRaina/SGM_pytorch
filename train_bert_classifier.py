@@ -35,6 +35,7 @@ parser.add_argument('--train_prompts_idxs_path', type=str, help='Load path to tr
 parser.add_argument('--valid_prompts_idxs_path', type=str, help='Load path to valid data unique prompt indices (for dynamic shuffling)')
 parser.add_argument('--save_path', type=str, help='Load path to which trained model will be saved')
 parser.add_argument('--model_checkpoint', type=str, default=None, help='Optionally load path to a trained model checkpoint')
+parser.add_argument('--large', type=bool, default=False, help='If BERT-large should be used for training')
 
 # Function to calculate the accuracy of our predictions vs labels
 def flat_accuracy(preds, labels):
@@ -119,7 +120,10 @@ def main(args):
 
     # Load the BERT tokenizer.
     print('Loading BERT tokenizer...')
-    tokenizer = BertTokenizer.from_pretrained('bert-base-uncased', do_lower_case=True)
+    prlm = 'bert-base-uncased'
+    if args.large:
+        prlm = 'bert-large-uncased'
+    tokenizer = BertTokenizer.from_pretrained(prlm, do_lower_case=True)
 
     with open(args.unique_prompts_path) as f:
         topics = f.readlines()
@@ -211,7 +215,7 @@ def main(args):
     # linear classification layer on top.
     if args.model_checkpoint is None:
         model = BertForSequenceClassification.from_pretrained(
-            "bert-base-uncased", # Use the 12-layer BERT model, with an uncased vocab.
+            prlm, # Use the 12-layer BERT model, with an uncased vocab.
             num_labels = 2, # The number of output labels--2 for binary classification.
                             # You can increase this for multi-class tasks.   
             output_attentions = False, # Whether the model returns attentions weights.
